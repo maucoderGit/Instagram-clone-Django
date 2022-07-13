@@ -1,0 +1,41 @@
+{% extends 'users/base.html' %}
+
+{% block head_content %}
+<title>Sign up</title>
+{% endblock %}
+
+{% block container %}
+
+    {% comment %} {% if error %}
+        <p class="alert alert-danger">
+            {{ error }}
+        </p>
+    {% endif %} {% endcomment %}
+
+    <form action="{% url 'users:signup' %}" method='POST'>
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        {% comment %} <div class="form-group">
+            <input type="text" class='form-control' placeholder='Username' name='username' required='true'>
+        </div>
+        <div class="form-group">
+            <input type="password" class='form-control' placeholder='Password' name='password' required='true'>
+        </div>
+        <div class="form-group">
+            <input type="password" class='form-control' placeholder='Password confirmation' name='password_confirmation' required='true'>
+        </div>
+        <div class='form-group'>
+            <input type="text" class="form-control" placeholder='First name' name='first_name' required='true'>
+        </div>
+        <div class='form-group'>
+            <input type="text" class="form-control" placeholder='Last name' name='last_name' required='true'>
+        </div>
+        <div class='form-group'>
+            <input type="text" class="form-control" placeholder='email' name='email' required='true'>
+        </div> {% endcomment %}
+
+        <button class="btn btn-primary btn-block mt-5" type="submit">Register</button>
+    </form>
+{% endblock %}
