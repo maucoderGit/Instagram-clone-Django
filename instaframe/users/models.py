@@ -53,3 +53,9 @@ class UserFollowing(models.Model):
 
     # Extra info
     created = models.DateTimeField(auto_now_add=True)
+
+    def number_of_following(self) -> int:
+        """Count and return number of followers."""
+        user = Profile.objects.get(pk=self.user_id)
+        
+        return user.following.all().count()
