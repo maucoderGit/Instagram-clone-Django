@@ -27,12 +27,12 @@
                             Edit profile
                         </a>
                     {% else %}
-                        <a
-                            href=""
-                            class="ml-5 btn btn-sm btn-primary"
-                        >
-                            Follow
-                        </a>
+                        {% if followed %}
+                            <a href="{% url 'users:follow' username=user.username  %}" class="btn btn-primary" style="background-color: #2979fc;">Unfollow</a>
+                        {% else %}
+                            <a  href="{% url 'users:follow' username=user.username  %}" class="btn btn-primary">Follow</a>
+                        {% endif %}
+                            <button class="btn btn-outline-primary">Message</button>
                     {% endif %}
                 </h2>
                 <div class="row mt-2" style="font-size: 1.2em">

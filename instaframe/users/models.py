@@ -1,6 +1,7 @@
 """Users models."""
 # Python
 # Django
+from uuid import uuid4
 from django.contrib.auth.models import User
 from django.db import models
 # Local Apps
@@ -46,13 +47,17 @@ class UserFollowing(models.Model):
     - created = Shows datetime of a user was followed
     """
     # User
-    user_id = models.ForeignKey("Profile", related_name="following", on_delete=models.CASCADE)
+    user_id = models.ForeignKey("Profile", related_name="followers", on_delete=models.CASCADE)
 
     # Followed by
-    following_user_id = models.ForeignKey("Profile", related_name="followers", on_delete=models.CASCADE)
+    following_user_id = models.ForeignKey("Profile", related_name="following", on_delete=models.CASCADE)
 
     # Extra info
     created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        """Return a username."""
+        return self.following_user_id.id
 
     def number_of_following(self) -> int:
         """Count and return number of followers."""

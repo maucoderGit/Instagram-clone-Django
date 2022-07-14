@@ -1,18 +1,52 @@
 """Users views file."""
 # Django
+from django.contrib import messages
 from django.contrib.auth import views as auth_views
-from django.shortcuts import get_object_or_404
+from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView, FormView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Models
 from posts.models import Post
-from .models import Profile, User
+from .models import Profile, User, UserFollowing
 from django.urls import reverse, reverse_lazy
 
 #Forms
 from .forms import SignupForm
 
+
+@login_required
+def follow_user(request, username):
+    """Follow view.
+    
+    This view validate an user request to follow.
+    """
+    user: Profile = Profile.objects.get(user__username=username)
+    current_user: Profile = Profile.objects.get(user__username=request.user.username)
+    # followers = user.followers.all()
+    # follow = None
+
+    if user != current_user:
+        #for follower in followers:
+        #    if current_user.id == follower.following_user_id.id:
+                #is_follow = user.followers.filter(following_user_id__id=current_user.id)
+                #is_follow = True
+        #if is_follow != None:
+        is_follow = user.followers.filter(following_user_id__id=current_user.id)
+        if is_follow:
+            is_follow.delete()
+        else:
+            UserFollowing.objects.create(user_id=user,
+                             following_user_id=current_user)
+
+    return HttpResponseRedirect(reverse(
+            'users:detail',
+            kwargs={
+                'username': username,
+            }
+        )
+    )
 
 # Class Bases views
 
@@ -100,6 +134,8 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         """add user's posts to context."""
         context = super().get_context_data(**kwargs)
         user: User = self.get_object()
+        current_user: Profile = Profile.objects.get(user__username=self.request.user.username)
+        context['followed'] = user.profile.followers.filter(following_user_id__id=current_user.id)
         context['posts'] = Post.objects.filter(user=user).order_by('-created')
 
         return context

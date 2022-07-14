@@ -3,7 +3,11 @@
     <div class="media pt-3 pl-3 pb-1">
         <img class="mr-3 rounded-circle" height="35" src="{{ post.profile.picture.url }}" alt="{{ post.user.get_full_name }}">
         <div class="media-body">
-            <p style="margin-top: 5px;">{{ post.user.get_full_name  }}</p>
+            <p style="margin-top: 5px;">
+                <a style="color: #111" href='{% url 'users:detail' post.profile.user.username %}'>
+                    {{ post.user.get_full_name }}
+                </a>
+            </p>
         </div>
     </div>
 
