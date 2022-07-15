@@ -1,1 +1,1 @@
-web: gunicorn instaframe.wsgi --log-file -
+web: gunicorn instaframe/instaframe.wsgi --log-file -
