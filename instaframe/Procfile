@@ -1,0 +1,1 @@
+web: gunicorn instaframe.wsgi --log-file -

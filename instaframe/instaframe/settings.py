@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-wdzch$x^d^2cte+w^jjh1%1g#$zo^4@tym3_f)*g-ssm71t083'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -60,7 +60,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'instaframe.middleware.ProfileCompletionMiddleware'
+    'instaframe.middleware.ProfileCompletionMiddleware',
+    # Deploy
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'instaframe.urls'
@@ -89,13 +91,20 @@ WSGI_APPLICATION = 'instaframe.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
+import dj_database_url
+from decouple import config
+DATABASES = {
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL')
+    )
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -138,8 +147,8 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 #     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 # ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+# # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# # MEDIA_URL = '/media/'
 
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL: str = 'posts:feed'
@@ -148,3 +157,13 @@ LOGOUT_REDIRECT_URL: str = LOGIN_URL
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SRATIC_TOOR = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static')
+)
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
